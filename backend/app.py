@@ -24,7 +24,7 @@ app.config['SECRET_KEY'] = 'secret_key'
 if 'DATABASE_URL' in os.environ:
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../backend/database.db'
 
 # Configuração do LoginManager
 login_manager = LoginManager()
