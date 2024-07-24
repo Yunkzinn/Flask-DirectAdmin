@@ -18,7 +18,7 @@ from view_jurisprudence import view_jurisprudence
 app = Flask(__name__, static_folder='../frontend/static')
 
 # Configurações do aplicativo
-app.config['SECRET_KEY'] = 'secret_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_secret_key')
 
 # Configuração do banco de dados
 if 'DATABASE_URL' in os.environ:
