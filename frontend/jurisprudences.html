@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurisprudências</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .sidebar .logo img {
+            width: 235px;
+            height: 235px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .separator {
+            width: 100%;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .sidebar .title {
+            color: #333;
+            font-size: 16px;
+            text-align: left;
+            width: 100%;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar .menu {
+            flex: 1;
+        }
+
+        .sidebar .logout {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .container {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .add-jurisprudence-button a {
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .add-jurisprudence-button a:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            table-layout: fixed; /* Adiciona comportamento de tabela fixa */
+        }
+
+        table thead {
+            background-color: #f4f4f4;
+        }
+
+        table th,
+        table td {
+            padding: 12px 15px;
+            text-align: center; /* Centraliza o texto em todas as células */
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+            white-space: nowrap; /* Impede quebra de linha */
+            overflow: hidden; /* Esconde o excesso de texto */
+            text-overflow: ellipsis; /* Adiciona "..." ao final do texto longo */
+        }
+
+        table th {
+            background-color: #f4f4f4;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .actions a,
+        .actions button {
+            color: inherit;
+            text-decoration: none;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .actions .edit-icon {
+            color: blue;
+            font-size: 20px;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .actions .edit-icon:hover {
+            color: darkblue;
+            transform: scale(1.1);
+        }
+
+        .actions .view-icon {
+            color: lightblue;
+            font-size: 20px;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .actions .view-icon:hover {
+            color: darkblue;
+            transform: scale(1.1);
+        }
+
+        .actions .delete-icon {
+            color: red;
+            font-size: 20px;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .actions .delete-icon:hover {
+            color: darkred;
+            transform: scale(1.1);
+        }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .footer a i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            .add-jurisprudence-button {
+                text-align: center;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                padding: 10px;
+            }
+
+            .sidebar a {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <!-- Incluir Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </div>
+        <div class="separator"></div>
+        <div class="title">Navegação</div>
+        <div class="menu">
+            <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
+            <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+        </div>
+        <div class="footer">
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <div class="add-jurisprudence-button">
+                <a href="/create-jurisprudence">+ Adicionar Jurisprudência</a>
+            </div>
+        </div>
+        <h2>Jurisprudências</h2>
+        <p>Lista com todas as jurisprudências já registradas.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Referências</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>Palavras-chave</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for jurisprudence in jurisprudences %}
+                <tr>
+                    <td>{{ jurisprudence.title }}</td>
+                    <td>{{ jurisprudence.references }}</td>
+                    <td>{{ jurisprudence.city }}</td>
+                    <td>{{ jurisprudence.state }}</td>
+                    <td>{{ jurisprudence.keywords }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('add_jurisprudence.edit_jurisprudence', id=jurisprudence.id) }}" class="edit-icon" aria-label="Editar jurisprudência">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <a href="{{ url_for('view_jurisprudence.show', id=jurisprudence.id) }}" class="view-icon" aria-label="Visualizar jurisprudência">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <form action="{{ url_for('add_jurisprudence.delete_jurisprudence', id=jurisprudence.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="delete-icon" aria-label="Excluir jurisprudência" onclick="return confirm('Você tem certeza que deseja excluir esta jurisprudência?');">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
