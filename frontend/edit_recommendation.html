@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Jurisprudência</title>
+    <title>Editar Recomendação</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -227,7 +227,6 @@
             }
         }
     </style>
-    <!-- Incluir CSS e JS do Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </head>
@@ -249,42 +248,32 @@
         </div>
     </div>
     <div class="container">
-        <h2>Editar Jurisprudência</h2>
-        <form action="{{ url_for('add_jurisprudence.edit_jurisprudence', id=jurisprudence.id) }}" method="post">
+        <h2>Editar Recomendação</h2>
+        <form action="{{ url_for('add_recommendation.edit_recommendation', id=recommendation.id) }}" method="post">
             <div class="form-group">
-                <label for="title">Título:</label>
-                <input type="text" id="title" name="title" value="{{ jurisprudence.title }}" required>
+                <label for="theme">Tema:</label>
+                <input type="text" id="theme" name="theme" value="{{ recommendation.theme }}" required>
             </div>
 
             <div class="form-group">
-                <label for="references">Referências:</label>
-                <input type="text" id="references" name="references" value="{{ jurisprudence.references }}">
+                <label for="recommendations">Recomendações:</label>
+                <input type="text" id="recommendations" name="recommendations" value="{{ recommendation.recommendations }}">
             </div>
 
-            <div class="form-group-inline">
-                <div class="city">
-                    <label for="city">Cidade:</label>
-                    <input type="text" id="city" name="city" value="{{ jurisprudence.city }}">
-                </div>
-                <div class="state">
-                    <label for="state">Estado:</label>
-                    <input type="text" id="state" name="state" value="{{ jurisprudence.state }}">
-                </div>
-                <div class="keywords">
-                    <label for="keywords">Palavras-chave:</label>
-                    <input type="text" id="keywords" name="keywords" value="{{ jurisprudence.keywords }}">
-                </div>
+            <div class="form-group">
+                <label for="keywords">Palavras-chave:</label>
+                <input type="text" id="keywords" name="keywords" value="{{ recommendation.keywords }}">
             </div>
 
             <div class="form-group">
                 <label for="specialty">Especialidade médica:</label>
-                <input type="text" id="specialty" name="specialty" value="{{ jurisprudence.specialty }}">
+                <input type="text" id="specialty" name="specialty" value="{{ recommendation.specialty }}">
             </div>
 
             <div class="form-group">
-                <label for="content">Jurisprudência:</label>
+                <label for="content">Conteúdo:</label>
                 <div id="editor-container"></div>
-                <input type="hidden" id="content" name="content" value="{{ jurisprudence.content }}">
+                <input type="hidden" id="content" name="content" value="{{ recommendation.content }}">
             </div>
 
             <div class="form-actions">
@@ -295,7 +284,6 @@
     </div>
     
     <script>
-        // Inicializar o editor Quill
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
@@ -309,16 +297,13 @@
             }
         });
 
-        // Definir o conteúdo do editor a partir do valor do campo oculto
         quill.root.innerHTML = document.querySelector('input[name="content"]').value;
 
-        // Ao enviar o formulário, definir o valor do campo oculto como o conteúdo do editor
         document.querySelector('form').addEventListener('submit', function() {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
         });
 
-        // Função para confirmar o cancelamento
         function confirmCancel() {
             if (confirm("Você deseja mesmo cancelar?")) {
                 window.history.back();

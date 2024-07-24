@@ -83,8 +83,9 @@
 
 <body>
     <div class="navbar">
-        <a href="/home/articles">Artigos</a>
-        <a href="/home/jurisprudences">Jurisprudências</a>
+        <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
+        <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+        <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
     </div>
     <div class="container">
         <a href="/home/articles" class="back-button">Voltar para Artigos</a>
@@ -93,6 +94,7 @@
         <p><strong>Cidade:</strong> {{ article.city }}</p>
         <p><strong>Estado:</strong> {{ article.state }}</p>
         <p><strong>Palavras-chave:</strong> {{ article.keywords }}</p>
+        <p><strong>Especialidade médica:</strong> {{ article.specialty }}</p>
         <div class="content">{{ article.content|safe }}</div>
     </div>
 </body>

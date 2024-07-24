@@ -13,6 +13,7 @@ def show():
         city = request.form.get('city')
         state = request.form.get('state')
         keywords = request.form.get('keywords')
+        specialty = request.form.get('specialty')
         content = request.form.get('content')
 
         new_article = Article(
@@ -21,6 +22,7 @@ def show():
             city=city,
             state=state,
             keywords=keywords,
+            specialty=specialty,  # Campo adicionado
             content=content
         )
 

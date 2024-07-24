@@ -186,13 +186,13 @@
             border: 2px solid #007BFF;
             border-radius: 4px;
             margin-bottom: 16px;
-            white-space: pre-wrap; /* Garante que o texto seja quebrado dentro da caixa */
-            overflow-wrap: break-word; /* Garante que o texto seja quebrado dentro da caixa */
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
         }
 
         .ql-editor {
-            white-space: pre-wrap; /* Garante que o texto seja quebrado dentro da caixa */
-            overflow-wrap: break-word; /* Garante que o texto seja quebrado dentro da caixa */
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
         }
 
         @media (max-width: 768px) {
@@ -227,7 +227,6 @@
             }
         }
     </style>
-    <!-- Incluir o CSS e JS do Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </head>
@@ -242,6 +241,7 @@
         <div class="menu">
             <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
             <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+            <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
         </div>
         <div class="footer">
             <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
@@ -276,6 +276,11 @@
             </div>
 
             <div class="form-group">
+                <label for="specialty">Especialidade médica:</label>
+                <input type="text" id="specialty" name="specialty">
+            </div>
+
+            <div class="form-group">
                 <label for="content">Artigo:</label>
                 <div id="editor-container"></div>
                 <input type="hidden" id="content" name="content">
@@ -289,7 +294,6 @@
     </div>
     
     <script>
-        // Inicializar o editor Quill
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
@@ -303,21 +307,18 @@
             }
         });
 
-        // Ao enviar o formulário, definir o valor do campo oculto para o conteúdo do editor
         document.getElementById('article-form').addEventListener('submit', function(event) {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
-            
-            // Evitar o envio padrão do formulário para manipulação com AJAX
+
             event.preventDefault();
 
-            // Enviar o formulário via AJAX
             fetch(this.action, {
                 method: 'POST',
                 body: new FormData(this)
             }).then(response => {
                 if (response.ok) {
-                    window.location.href = '/home/articles'; // Redirecionar para a página de artigos
+                    window.location.href = '/home/articles';
                 } else {
                     alert('Erro ao salvar o artigo.');
                 }
@@ -327,10 +328,9 @@
             });
         });
 
-        // Função para confirmar o cancelamento
         function confirmCancel() {
             if (confirm("Você deseja mesmo cancelar?")) {
-                window.location.href = '/home/articles'; // Redirecionar para a página de artigos
+                window.location.href = '/home/articles';
             }
         }
     </script>

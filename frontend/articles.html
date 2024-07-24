@@ -262,6 +262,7 @@
         <div class="menu">
             <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
             <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+            <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
         </div>
         <div class="footer">
             <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
@@ -284,6 +285,7 @@
                     <th>Cidade</th>
                     <th>Estado</th>
                     <th>Palavras-chave</th>
+                    <th>Especialidade médica</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -295,6 +297,7 @@
                     <td>{{ article.city }}</td>
                     <td>{{ article.state }}</td>
                     <td>{{ article.keywords }}</td>
+                    <td>{{ article.specialty }}</td>
                     <td class="actions">
                         <a href="{{ url_for('add_article.edit_article', id=article.id) }}" class="edit-icon" aria-label="Editar artigo">
                             <i class="fas fa-pencil-alt"></i>

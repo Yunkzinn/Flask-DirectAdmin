@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ jurisprudence.title }}</title>
+    <title>{{ recommendation.theme }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -76,7 +76,7 @@
         }
 
         .content {
-            margin-top: 40px; /* Espaço para o botão no canto superior direito */
+            margin-top: 40px;
         }
     </style>
 </head>
@@ -88,14 +88,12 @@
         <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
     </div>
     <div class="container">
-        <a href="/home/jurisprudences" class="back-button">Voltar para Jurisprudências</a>
-        <h1>{{ jurisprudence.title }}</h1>
-        <p><strong>Referências:</strong> {{ jurisprudence.references }}</p>
-        <p><strong>Cidade:</strong> {{ jurisprudence.city }}</p>
-        <p><strong>Estado:</strong> {{ jurisprudence.state }}</p>
-        <p><strong>Palavras-chave:</strong> {{ jurisprudence.keywords }}</p>
-        <p><strong>Especialidade médica:</strong> {{ jurisprudence.specialty }}</p>
-        <div class="content">{{ jurisprudence.content|safe }}</div>
+        <a href="/home/recommendations" class="back-button">Voltar para Recomendações</a>
+        <h1>{{ recommendation.theme }}</h1>
+        <p><strong>Recomendações:</strong> {{ recommendation.recommendations }}</p>
+        <p><strong>Palavras-chave:</strong> {{ recommendation.keywords }}</p>
+        <p><strong>Especialidade médica:</strong> {{ recommendation.specialty }}</p>
+        <div class="content">{{ recommendation.content|safe }}</div>
     </div>
 </body>
 

@@ -18,6 +18,7 @@ def edit_jurisprudence(id):
         jurisprudence.city = request.form['city']
         jurisprudence.state = request.form['state']
         jurisprudence.keywords = request.form['keywords']
+        jurisprudence.specialty = request.form['specialty']  # Campo adicionado
         jurisprudence.content = request.form['content']
         
         db.session.commit()

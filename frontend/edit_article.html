@@ -186,13 +186,13 @@
             border: 2px solid #007BFF;
             border-radius: 4px;
             margin-bottom: 16px;
-            white-space: pre-wrap; /* Garante que o texto seja quebrado dentro da caixa */
-            overflow-wrap: break-word; /* Garante que o texto seja quebrado dentro da caixa */
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
         }
 
         .ql-editor {
-            white-space: pre-wrap; /* Garante que o texto seja quebrado dentro da caixa */
-            overflow-wrap: break-word; /* Garante que o texto seja quebrado dentro da caixa */
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
         }
 
         @media (max-width: 768px) {
@@ -227,7 +227,6 @@
             }
         }
     </style>
-    <!-- Incluir CSS e JS do Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </head>
@@ -242,6 +241,7 @@
         <div class="menu">
             <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
             <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+            <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
         </div>
         <div class="footer">
             <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
@@ -276,6 +276,11 @@
             </div>
 
             <div class="form-group">
+                <label for="specialty">Especialidade médica:</label>
+                <input type="text" id="specialty" name="specialty" value="{{ article.specialty }}">
+            </div>
+
+            <div class="form-group">
                 <label for="content">Artigo:</label>
                 <div id="editor-container"></div>
                 <input type="hidden" id="content" name="content" value="{{ article.content }}">
@@ -289,7 +294,6 @@
     </div>
     
     <script>
-        // Inicializar o editor Quill
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
@@ -303,16 +307,13 @@
             }
         });
 
-        // Definir o conteúdo do editor a partir do valor do campo oculto
         quill.root.innerHTML = document.querySelector('input[name="content"]').value;
 
-        // Ao enviar o formulário, definir o valor do campo oculto como o conteúdo do editor
         document.querySelector('form').addEventListener('submit', function() {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
         });
 
-        // Função para confirmar o cancelamento
         function confirmCancel() {
             if (confirm("Você deseja mesmo cancelar?")) {
                 window.history.back();

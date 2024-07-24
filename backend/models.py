@@ -16,6 +16,7 @@ class Article(db.Model):
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
     keywords = db.Column(db.String(200))
+    specialty = db.Column(db.String(100))  # Campo adicionado
     content = db.Column(db.Text, nullable=False)
     
     def __repr__(self):
@@ -28,7 +29,19 @@ class Jurisprudence(db.Model):
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
     keywords = db.Column(db.String(255))
+    specialty = db.Column(db.String(100))  # Campo adicionado
     content = db.Column(db.Text, nullable=False)
     
     def __repr__(self):
         return f'<Jurisprudence {self.title}>'
+
+class Recommendation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    theme = db.Column(db.String(150), nullable=False)
+    recommendations = db.Column(db.String(300))
+    keywords = db.Column(db.String(255))
+    specialty = db.Column(db.String(100))
+    content = db.Column(db.Text, nullable=False)
+    
+    def __repr__(self):
+        return f'<Recommendation {self.theme}>'

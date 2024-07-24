@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jurisprudências</title>
+    <title>Recomendações</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -101,7 +101,7 @@
             margin: 0;
         }
 
-        .add-jurisprudence-button a {
+        .add-recommendation-button a {
             display: inline-block;
             padding: 10px 20px;
             color: white;
@@ -110,7 +110,7 @@
             border-radius: 5px;
         }
 
-        .add-jurisprudence-button a:hover {
+        .add-recommendation-button a:hover {
             background-color: #0056b3;
         }
 
@@ -232,7 +232,7 @@
                 font-size: 14px;
             }
 
-            .add-jurisprudence-button {
+            .add-recommendation-button {
                 text-align: center;
             }
 
@@ -270,43 +270,39 @@
     </div>
     <div class="container">
         <div class="header">
-            <h1>Dashboard</h1>
-            <div class="add-jurisprudence-button">
-                <a href="/create-jurisprudence">+ Adicionar Jurisprudência</a>
+            <h1>Recomendações</h1>
+            <div class="add-recommendation-button">
+                <a href="/create-recommendation">+ Adicionar Recomendação</a>
             </div>
         </div>
-        <h2>Jurisprudências</h2>
-        <p>Lista com todas as jurisprudências já registradas.</p>
+        <h2>Recomendações</h2>
+        <p>Lista com todas as recomendações já registradas.</p>
         <table>
             <thead>
                 <tr>
-                    <th>Título</th>
-                    <th>Referências</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
+                    <th>Tema</th>
+                    <th>Recomendações</th>
                     <th>Palavras-chave</th>
                     <th>Especialidade médica</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {% for jurisprudence in jurisprudences %}
+                {% for recommendation in recommendations %}
                 <tr>
-                    <td>{{ jurisprudence.title }}</td>
-                    <td>{{ jurisprudence.references }}</td>
-                    <td>{{ jurisprudence.city }}</td>
-                    <td>{{ jurisprudence.state }}</td>
-                    <td>{{ jurisprudence.keywords }}</td>
-                    <td>{{ jurisprudence.specialty }}</td>
+                    <td>{{ recommendation.theme }}</td>
+                    <td>{{ recommendation.recommendations }}</td>
+                    <td>{{ recommendation.keywords }}</td>
+                    <td>{{ recommendation.specialty }}</td>
                     <td class="actions">
-                        <a href="{{ url_for('add_jurisprudence.edit_jurisprudence', id=jurisprudence.id) }}" class="edit-icon" aria-label="Editar jurisprudência">
+                        <a href="{{ url_for('add_recommendation.edit_recommendation', id=recommendation.id) }}" class="edit-icon" aria-label="Editar recomendação">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <a href="{{ url_for('view_jurisprudence.show', id=jurisprudence.id) }}" class="view-icon" aria-label="Visualizar jurisprudência">
+                        <a href="{{ url_for('view_recommendation.show', id=recommendation.id) }}" class="view-icon" aria-label="Visualizar recomendação">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <form action="{{ url_for('add_jurisprudence.delete_jurisprudence', id=jurisprudence.id) }}" method="post" style="display:inline;">
-                            <button type="submit" class="delete-icon" aria-label="Excluir jurisprudência" onclick="return confirm('Você tem certeza que deseja excluir esta jurisprudência?');">
+                        <form action="{{ url_for('add_recommendation.delete_recommendation', id=recommendation.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="delete-icon" aria-label="Excluir recomendação" onclick="return confirm('Você tem certeza que deseja excluir esta recomendação?');">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>

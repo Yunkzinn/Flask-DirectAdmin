@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
-from models import db, Users, Article
+from models import db, Users, Article, Jurisprudence, Recommendation
 
 from index import index
 from login import login
@@ -11,8 +11,11 @@ from add_article import add_article
 from create_article import create_article
 from add_jurisprudence import add_jurisprudence
 from create_jurisprudence import create_jurisprudence
+from add_recommendation import add_recommendation
+from create_recommendation import create_recommendation
 from view_article import view_article
 from view_jurisprudence import view_jurisprudence
+from view_recommendation import view_recommendation
 
 app = Flask(__name__, static_folder='../frontend/static')
 
@@ -42,8 +45,11 @@ app.register_blueprint(add_article)
 app.register_blueprint(create_article)
 app.register_blueprint(add_jurisprudence)
 app.register_blueprint(create_jurisprudence)
+app.register_blueprint(add_recommendation)
+app.register_blueprint(create_recommendation)
 app.register_blueprint(view_article)
 app.register_blueprint(view_jurisprudence)
+app.register_blueprint(view_recommendation)
 
 # Função para carregar o usuário
 @login_manager.user_loader

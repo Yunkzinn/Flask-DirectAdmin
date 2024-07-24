@@ -14,6 +14,7 @@ def show():
         city = request.form['city']
         state = request.form['state']
         keywords = request.form['keywords']
+        specialty = request.form['specialty']  # Campo adicionado
         content = request.form['content']
         
         new_jurisprudence = Jurisprudence(
@@ -22,6 +23,7 @@ def show():
             city=city,
             state=state,
             keywords=keywords,
+            specialty=specialty,  # Campo adicionado
             content=content
         )
         
