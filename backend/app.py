@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_login import LoginManager
 from models import db, Users, Article
@@ -18,7 +19,12 @@ app = Flask(__name__, static_folder='../frontend/static')
 
 # Configurações do aplicativo
 app.config['SECRET_KEY'] = 'secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
+
+# Configuração do banco de dados
+if 'DATABASE_URL' in os.environ:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
 
 # Configuração do LoginManager
 login_manager = LoginManager()
