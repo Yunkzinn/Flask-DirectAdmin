@@ -1,7 +1,7 @@
 flask
-sqlalchemy
 flask_sqlalchemy
 flask_login
+sqlalchemy
 werkzeug
 gunicorn
 psycopg2-binary
