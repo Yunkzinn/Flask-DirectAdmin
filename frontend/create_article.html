@@ -116,6 +116,7 @@
         }
 
         input[type="text"],
+        select,
         input[type="submit"] {
             width: calc(100% - 20px);
             padding: 8px;
@@ -126,6 +127,7 @@
         }
 
         input[type="text"]:focus,
+        select:focus,
         input[type="submit"]:focus {
             border-color: #0056b3;
         }
@@ -143,12 +145,12 @@
             flex: 1;
         }
 
-        .form-group-inline .city {
+        .form-group-inline .state {
             flex: 0 0 30%;
         }
 
-        .form-group-inline .state {
-            flex: 0 0 20%;
+        .form-group-inline .city {
+            flex: 0 0 30%;
         }
 
         .form-group-inline .keywords {
@@ -220,8 +222,8 @@
                 gap: 10px;
             }
 
-            .form-group-inline .city,
             .form-group-inline .state,
+            .form-group-inline .city,
             .form-group-inline .keywords {
                 flex: 1 0 auto;
             }
@@ -261,13 +263,17 @@
             </div>
 
             <div class="form-group-inline">
-                <div class="city">
-                    <label for="city">Cidade:</label>
-                    <input type="text" id="city" name="city">
-                </div>
                 <div class="state">
                     <label for="state">Estado:</label>
-                    <input type="text" id="state" name="state">
+                    <select id="state" name="state">
+                        <option value="">Selecione o estado</option>
+                    </select>
+                </div>
+                <div class="city">
+                    <label for="city">Cidade:</label>
+                    <select id="city" name="city" disabled>
+                        <option value="">Selecione a cidade</option>
+                    </select>
                 </div>
                 <div class="keywords">
                     <label for="keywords">Palavras-chave:</label>
@@ -333,6 +339,40 @@
                 window.location.href = '/home/articles';
             }
         }
+
+        // Carregar o JSON com os estados e cidades
+        fetch("{{ url_for('static', filename='estados_cidades.json') }}")
+            .then(response => response.json())
+            .then(data => {
+                const stateSelect = document.getElementById('state');
+                const citySelect = document.getElementById('city');
+                
+                data.estados.forEach(estado => {
+                    const option = document.createElement('option');
+                    option.value = estado.sigla;
+                    option.textContent = estado.nome;
+                    stateSelect.appendChild(option);
+                });
+
+                stateSelect.addEventListener('change', function() {
+                    const selectedState = this.value;
+                    citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
+                    citySelect.disabled = false;
+
+                    if (selectedState === "") {
+                        citySelect.disabled = true;
+                    } else {
+                        const estado = data.estados.find(estado => estado.sigla === selectedState);
+                        estado.cidades.forEach(cidade => {
+                            const option = document.createElement('option');
+                            option.value = cidade;
+                            option.textContent = cidade;
+                            citySelect.appendChild(option);
+                        });
+                    }
+                });
+            })
+            .catch(error => console.error('Erro ao carregar o JSON:', error));
     </script>
 </body>
 
