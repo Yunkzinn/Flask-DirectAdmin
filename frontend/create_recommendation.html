@@ -251,31 +251,98 @@
             </div>
         </form>
     </div>
-    
+
     <script>
-        // Inicializar o editor Quill
+        // Função para registrar os textos traduzidos em português
+        function registerQuillTranslations() {
+            Quill.register('modules/i18n', function(quill, options) {
+                quill.translations = options.translations;
+            });
+
+            // Definindo as traduções em português
+            const translations = {
+                'header': {
+                    '1': 'Cabeçalho 1',
+                    '2': 'Cabeçalho 2'
+                },
+                'font': {
+                    '': 'Fonte',
+                    'sans-serif': 'Sans Serif',
+                    'serif': 'Serif',
+                    'monospace': 'Monospace'
+                },
+                'size': {
+                    'small': 'Pequeno',
+                    'large': 'Grande',
+                    'huge': 'Enorme'
+                },
+                'bold': 'Negrito',
+                'italic': 'Itálico',
+                'underline': 'Sublinhado',
+                'strike': 'Tachado',
+                'blockquote': 'Citação',
+                'list': {
+                    'ordered': 'Lista Ordenada',
+                    'bullet': 'Lista com Marcadores'
+                },
+                'script': {
+                    'sub': 'Subscrito',
+                    'super': 'Sobrescrito'
+                },
+                'indent': {
+                    '-1': 'Diminuir Recuo',
+                    '+1': 'Aumentar Recuo'
+                },
+                'direction': {
+                    'rtl': 'Direção da Direita para a Esquerda'
+                },
+                'align': {
+                    '': 'Alinhar',
+                    'center': 'Centro',
+                    'right': 'Direita',
+                    'justify': 'Justificar'
+                },
+                'color': 'Cor do Texto',
+                'background': 'Cor do Fundo',
+                'link': 'Inserir Link',
+                'image': 'Inserir Imagem',
+                'video': 'Inserir Vídeo',
+                'formula': 'Inserir Fórmula',
+                'clean': 'Limpar Formatação'
+            };
+
+            return translations;
+        }
+
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
+                    [{ 'font': [] }], // Estilo de Fonte
+                    [{ 'size': ['small', false, 'large', 'huge'] }], // Tamanho de Fonte
                     ['bold', 'italic', 'underline'],
+                    [{ 'color': [] }, { 'background': [] }], // Cor do Texto e do Fundo
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }], // Alinhamento
                     ['link', 'image'],
-                    ['clean']
-                ]
+                    ['clean'] // Remover formatação
+                ],
+                clipboard: {
+                    matchVisual: false  // Permite copiar e colar com formatação
+                }
+            },
+            i18n: {
+                translations: registerQuillTranslations()
             }
         });
 
-        // Ao enviar o formulário, definir o valor do campo oculto para o conteúdo do editor
         document.getElementById('recommendation-form').addEventListener('submit', function(event) {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
-            
-            // Evitar o envio padrão do formulário para manipulação com AJAX
+
             event.preventDefault();
 
-            // Enviar o formulário via AJAX
             fetch(this.action, {
                 method: 'POST',
                 body: new FormData(this)

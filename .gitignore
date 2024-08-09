@@ -1,1 +1,63 @@
-.db
+# Diretórios do Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyc
+*.pyd
+*.env
+*.venv
+*.egg
+*.egg-info/
+dist/
+build/
+wheels/
+
+# Arquivos de configuração do editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Configurações específicas de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de banco de dados locais
+*.sqlite3
+*.db
+*.sql
+*.sqlite
+
+# Arquivos de ambiente
+.env
+*.env
+
+# Logs e registros
+*.log
+
+# Arquivos de migração do Flask
+migrations/
+
+# Arquivos estáticos e de mídia gerados dinamicamente
+instance/
+staticfiles/
+media/
+
+# Arquivos de segurança
+.secret_key
+.secret_token
+
+# Arquivos de distribuição
+*.bak
+*.swp
+*.lock
+
+# Arquivos de dependências (gerados)
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Exclua tudo do node_modules, caso você tenha dependências do Node.js
+node_modules/
+
+# Arquivos de compilação do frontend (se aplicável)
+*.map

@@ -139,7 +139,7 @@
             gap: 20px;
         }
 
-        .form-group-inline > div {
+        .form-group-inline>div {
             flex: 1;
         }
 
@@ -282,28 +282,100 @@
             </div>
         </form>
     </div>
-    
+
     <script>
+        // Função para registrar os textos traduzidos em português
+        function registerQuillTranslations() {
+            Quill.register('modules/i18n', function (quill, options) {
+                quill.translations = options.translations;
+            });
+
+            // Definindo as traduções em português
+            const translations = {
+                'header': {
+                    '1': 'Cabeçalho 1',
+                    '2': 'Cabeçalho 2'
+                },
+                'font': {
+                    '': 'Fonte',
+                    'sans-serif': 'Sans Serif',
+                    'serif': 'Serif',
+                    'monospace': 'Monospace'
+                },
+                'size': {
+                    'small': 'Pequeno',
+                    'large': 'Grande',
+                    'huge': 'Enorme'
+                },
+                'bold': 'Negrito',
+                'italic': 'Itálico',
+                'underline': 'Sublinhado',
+                'strike': 'Tachado',
+                'blockquote': 'Citação',
+                'list': {
+                    'ordered': 'Lista Ordenada',
+                    'bullet': 'Lista com Marcadores'
+                },
+                'script': {
+                    'sub': 'Subscrito',
+                    'super': 'Sobrescrito'
+                },
+                'indent': {
+                    '-1': 'Diminuir Recuo',
+                    '+1': 'Aumentar Recuo'
+                },
+                'direction': {
+                    'rtl': 'Direção da Direita para a Esquerda'
+                },
+                'align': {
+                    '': 'Alinhar',
+                    'center': 'Centro',
+                    'right': 'Direita',
+                    'justify': 'Justificar'
+                },
+                'color': 'Cor do Texto',
+                'background': 'Cor do Fundo',
+                'link': 'Inserir Link',
+                'image': 'Inserir Imagem',
+                'video': 'Inserir Vídeo',
+                'formula': 'Inserir Fórmula',
+                'clean': 'Limpar Formatação'
+            };
+
+            return translations;
+        }
+
+        // Inicializar o editor Quill
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
+                    [{ 'font': [] }], // Estilo de Fonte
+                    [{ 'size': ['small', false, 'large', 'huge'] }], // Tamanho de Fonte
                     ['bold', 'italic', 'underline'],
+                    [{ 'color': [] }, { 'background': [] }], // Cor do Texto e do Fundo
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }], // Alinhamento
                     ['link', 'image'],
-                    ['clean']
+                    ['clean'] // Remover formatação
                 ]
+            },
+            i18n: {
+                translations: registerQuillTranslations()
             }
         });
 
+        // Definir o conteúdo do editor a partir do valor do campo oculto
         quill.root.innerHTML = document.querySelector('input[name="content"]').value;
 
+        // Ao enviar o formulário, definir o valor do campo oculto como o conteúdo do editor
         document.querySelector('form').addEventListener('submit', function() {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
         });
 
+        // Função para confirmar o cancelamento
         function confirmCancel() {
             if (confirm("Você deseja mesmo cancelar?")) {
                 window.history.back();

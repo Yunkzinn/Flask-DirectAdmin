@@ -4,6 +4,7 @@
         "sigla": "AC",
         "nome": "Acre",
         "cidades": [
+          "Aplicável a todas cidades",
           "Acrelândia",
           "Assis Brasil",
           "Brasiléia",
@@ -32,6 +33,7 @@
         "sigla": "AL",
         "nome": "Alagoas",
         "cidades": [
+          "Aplicável a todas cidades",
           "Água Branca",
           "Anadia",
           "Arapiraca",
@@ -140,6 +142,7 @@
         "sigla": "AM",
         "nome": "Amazonas",
         "cidades": [
+          "Aplicável a todas cidades",
           "Alvarães",
           "Amaturá",
           "Anamã",
@@ -208,6 +211,7 @@
         "sigla": "AP",
         "nome": "Amapá",
         "cidades": [
+          "Aplicável a todas cidades",
           "Amapá",
           "Calçoene",
           "Cutias",
@@ -230,6 +234,7 @@
         "sigla": "BA",
         "nome": "Bahia",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abaíra",
           "Abaré",
           "Acajutiba",
@@ -653,6 +658,7 @@
         "sigla": "CE",
         "nome": "Ceará",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abaiara",
           "Acarape",
           "Acaraú",
@@ -843,6 +849,7 @@
         "sigla": "DF",
         "nome": "Distrito Federal",
         "cidades": [
+          "Aplicável a todas cidades",
           "Águas Claras",
           "Arniqueira",
           "Brasília",
@@ -885,6 +892,7 @@
         "sigla": "ES",
         "nome": "Espírito Santo",
         "cidades": [
+          "Aplicável a todas cidades",
           "Afonso Cláudio",
           "Água Doce do Norte",
           "Águia Branca",
@@ -969,6 +977,7 @@
         "sigla": "GO",
         "nome": "Goiás",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abadia de Goiás",
           "Abadiânia",
           "Acreúna",
@@ -1221,6 +1230,7 @@
         "sigla": "MA",
         "nome": "Maranhão",
         "cidades": [
+          "Aplicável a todas cidades",
           "Açailândia",
           "Afonso Cunha",
           "Água Doce do Maranhão",
@@ -1444,6 +1454,7 @@
         "sigla": "MG",
         "nome": "Minas Gerais",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abadia dos Dourados",
           "Abaeté",
           "Abre Campo",
@@ -2303,6 +2314,7 @@
         "sigla": "MS",
         "nome": "Mato Grosso do Sul",
         "cidades": [
+          "Aplicável a todas cidades",
           "Água Clara",
           "Alcinópolis",
           "Amambaí",
@@ -2386,6 +2398,7 @@
         "sigla": "MT",
         "nome": "Mato Grosso",
         "cidades": [
+          "Aplicável a todas cidades",
           "Acorizal",
           "Água Boa",
           "Alta Floresta",
@@ -2531,6 +2544,7 @@
         "sigla": "PA",
         "nome": "Pará",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abaetetuba",
           "Abel Figueiredo",
           "Acará",
@@ -2680,6 +2694,7 @@
         "sigla": "PB",
         "nome": "Paraíba",
         "cidades": [
+          "Aplicável a todas cidades",
           "Água Branca",
           "Aguiar",
           "Alagoa Grande",
@@ -2909,6 +2924,7 @@
         "sigla": "PE",
         "nome": "Pernambuco",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abreu e Lima",
           "Afogados da Ingazeira",
           "Afrânio",
@@ -3100,6 +3116,7 @@
         "sigla": "PI",
         "nome": "Piauí",
         "cidades": [
+          "Aplicável a todas cidades",
           "Acauã",
           "Agricolândia",
           "Água Branca",
@@ -3328,6 +3345,7 @@
         "sigla": "PR",
         "nome": "Paraná",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abatiá",
           "Adrianópolis",
           "Agudos do Sul",
@@ -3733,6 +3751,7 @@
         "sigla": "RJ",
         "nome": "Rio de Janeiro",
         "cidades": [
+          "Aplicável a todas cidades",
           "Angra dos Reis",
           "Aperibé",
           "Araruama",
@@ -3831,6 +3850,7 @@
         "sigla": "RN",
         "nome": "Rio Grande do Norte",
         "cidades": [
+          "Aplicável a todas cidades",
           "Acari",
           "Açu",
           "Afonso Bezerra",
@@ -4004,6 +4024,7 @@
         "sigla": "RO",
         "nome": "Rondônia",
         "cidades": [
+          "Aplicável a todas cidades",
           "Alta Floresta d'Oeste",
           "Alto Alegre do Parecis",
           "Alto Paraíso",
@@ -4062,6 +4083,7 @@
         "sigla": "RR",
         "nome": "Roraima",
         "cidades": [
+          "Aplicável a todas cidades",
           "Alto Alegre",
           "Amajari",
           "Boa Vista",
@@ -4083,6 +4105,7 @@
         "sigla": "RS",
         "nome": "Rio Grande do Sul",
         "cidades": [
+          "Aplicável a todas cidades",
           "Aceguá",
           "Água Santa",
           "Agudo",
@@ -4585,6 +4608,7 @@
         "sigla": "SC",
         "nome": "Santa Catarina",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abdon Batista",
           "Abelardo Luz",
           "Agrolândia",
@@ -4884,6 +4908,7 @@
         "sigla": "SE",
         "nome": "Sergipe",
         "cidades": [
+          "Aplicável a todas cidades",
           "Amparo de São Francisco",
           "Aquidabã",
           "Aracaju",
@@ -4965,6 +4990,7 @@
         "sigla": "SP",
         "nome": "São Paulo",
         "cidades": [
+          "Aplicável a todas cidades",
           "Adamantina",
           "Adolfo",
           "Aguaí",
@@ -5616,6 +5642,7 @@
         "sigla": "TO",
         "nome": "Tocantins",
         "cidades": [
+          "Aplicável a todas cidades",
           "Abreulândia",
           "Aguiarnópolis",
           "Aliança do Tocantins",
