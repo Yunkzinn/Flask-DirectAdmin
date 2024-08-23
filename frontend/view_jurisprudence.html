@@ -11,42 +11,94 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: #f4f4f4;
+            display: flex;
+            background-color: #f9f9f9;
         }
 
-        .navbar {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        .navbar a {
-            float: left;
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            height: 100vh;
             padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .sidebar .logo img {
+            width: 235px;
+            height: 235px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .separator {
+            width: 100%;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .sidebar .title {
+            color: #333;
+            font-size: 16px;
+            text-align: left;
+            width: 100%;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
+            margin: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
         }
 
         .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             padding: 10px 20px;
             color: white;
             background-color: #007bff;
@@ -60,12 +112,6 @@
             background-color: #0056b3;
         }
 
-        h1 {
-            margin-top: 0;
-            font-size: 24px;
-            color: #333;
-        }
-
         p {
             margin: 10px 0;
             color: #666;
@@ -75,21 +121,54 @@
             color: #333;
         }
 
-        .content {
-            margin-top: 40px; /* Espaço para o botão no canto superior direito */
+        .ql-divider {
+            border-top: 2px solid black;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                padding: 10px;
+            }
+
+            .sidebar a {
+                font-size: 16px;
+            }
         }
     </style>
+    <!-- Incluir Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <div class="navbar">
-        <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
-        <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
-        <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </div>
+        <div class="separator"></div>
+        <div class="title">Navegação</div>
+        <div class="menu">
+            <a href="/home/articles"><i class="fas fa-file-alt"></i> Artigos</a>
+            <a href="/home/jurisprudences"><i class="fas fa-gavel"></i> Jurisprudências</a>
+            <a href="/home/recommendations"><i class="fas fa-book"></i> Recomendações</a>
+        </div>
+        <div class="footer">
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
     </div>
-    <div class="container">
-        <a href="/home/jurisprudences" class="back-button">Voltar para Jurisprudências</a>
-        <h1>{{ jurisprudence.title }}</h1>
+    <div class="content">
+        <div class="header">
+            <h1>{{ jurisprudence.title }}</h1>
+            <a href="/home/jurisprudences" class="back-button">Voltar para Jurisprudências</a>
+        </div>
         <p><strong>Referências:</strong> {{ jurisprudence.references }}</p>
         <p><strong>Cidade:</strong> {{ jurisprudence.city }}</p>
         <p><strong>Estado:</strong> {{ jurisprudence.state }}</p>

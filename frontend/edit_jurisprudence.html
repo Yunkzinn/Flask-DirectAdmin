@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Jurisprudência</title>
     <style>
+        /* Estilos permanecem os mesmos */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -116,6 +117,7 @@
         }
 
         input[type="text"],
+        select,
         input[type="submit"] {
             width: calc(100% - 20px);
             padding: 8px;
@@ -126,6 +128,7 @@
         }
 
         input[type="text"]:focus,
+        select:focus,
         input[type="submit"]:focus {
             border-color: #0056b3;
         }
@@ -227,7 +230,6 @@
             }
         }
     </style>
-    <!-- Incluir CSS e JS do Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </head>
@@ -262,13 +264,17 @@
             </div>
 
             <div class="form-group-inline">
-                <div class="city">
-                    <label for="city">Cidade:</label>
-                    <input type="text" id="city" name="city" value="{{ jurisprudence.city }}">
-                </div>
                 <div class="state">
                     <label for="state">Estado:</label>
-                    <input type="text" id="state" name="state" value="{{ jurisprudence.state }}">
+                    <select id="state" name="state" required>
+                        <option value="">Selecione o estado</option>
+                    </select>
+                </div>
+                <div class="city">
+                    <label for="city">Cidade:</label>
+                    <select id="city" name="city" required disabled>
+                        <option value="">Selecione a cidade</option>
+                    </select>
                 </div>
                 <div class="keywords">
                     <label for="keywords">Palavras-chave:</label>
@@ -297,7 +303,7 @@
     <script>
         // Função para registrar os textos traduzidos em português
         function registerQuillTranslations() {
-            Quill.register('modules/i18n', function (quill, options) {
+            Quill.register('modules/i18n', function(quill, options) {
                 quill.translations = options.translations;
             });
 
@@ -314,9 +320,14 @@
                     'monospace': 'Monospace'
                 },
                 'size': {
-                    'small': 'Pequeno',
-                    'large': 'Grande',
-                    'huge': 'Enorme'
+                    '12': '12px',
+                    '14': '14px',
+                    '16': '16px',
+                    '18': '18px',
+                    '20': '20px',
+                    '24': '24px',
+                    '30': '30px',
+                    '36': '36px'
                 },
                 'bold': 'Negrito',
                 'italic': 'Itálico',
@@ -356,20 +367,41 @@
             return translations;
         }
 
-        // Inicializar o editor Quill
+        // Adicionando o div de linha divisória ao Quill
+        var BlockEmbed = Quill.import('blots/block/embed');
+        class DividerBlot extends BlockEmbed {
+            static create() {
+                let node = super.create();
+                node.setAttribute('contenteditable', false);
+                node.classList.add('ql-divider');
+                return node;
+            }
+        }
+        DividerBlot.blotName = 'divider';
+        DividerBlot.tagName = 'hr';
+
+        Quill.register(DividerBlot);
+
+        // Registro dos tamanhos personalizados
+        var Size = Quill.import('attributors/style/size');
+        Size.whitelist = ['12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px'];
+        Quill.register(Size, true);
+
+        // Inicializando o Quill Editor com botão de linha divisória e seleção de tamanho de fonte por números
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
-                    [{ 'font': [] }], // Estilo de Fonte
-                    [{ 'size': ['small', false, 'large', 'huge'] }], // Tamanho de Fonte
+                    [{ 'font': [] }],
+                    [{ 'size': Size.whitelist }],
                     ['bold', 'italic', 'underline'],
-                    [{ 'color': [] }, { 'background': [] }], // Cor do Texto e do Fundo
+                    [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }], // Alinhamento
+                    [{ 'align': [] }],
                     ['link', 'image'],
-                    ['clean'] // Remover formatação
+                    [{ 'divider': true }], // Adicionando o botão de linha divisória
+                    ['clean']
                 ]
             },
             i18n: {
@@ -377,21 +409,121 @@
             }
         });
 
-        // Definir o conteúdo do editor a partir do valor do campo oculto
+        // Corrigir o texto exibido na lista de tamanhos e remover "Normal"
+        const sizePicker = document.querySelector('.ql-size .ql-picker-label');
+        sizePicker.innerHTML = '12px';  // Define um valor padrão de exibição
+        const sizeItems = document.querySelectorAll('.ql-size .ql-picker-item');
+
+        sizeItems.forEach((item) => {
+            const size = item.getAttribute('data-value');
+            item.textContent = size;
+            if (item.classList.contains('ql-picker-item')) {
+                item.innerHTML = size; // Atualiza o texto do item para exibir apenas o tamanho
+            }
+        });
+
+        // Atualizar o rótulo do seletor ao escolher um tamanho e fechar dropdown
+        sizeItems.forEach((item) => {
+            item.addEventListener('click', function() {
+                const selectedSize = item.getAttribute('data-value');
+                sizePicker.innerHTML = selectedSize;
+                quill.format('size', selectedSize); // Aplicar tamanho ao texto selecionado
+                document.querySelector('.ql-size .ql-picker-options').style.display = 'none'; // Fechar o dropdown
+            });
+        });
+
+        // Abrir o dropdown ao clicar no rótulo
+        sizePicker.addEventListener('click', function() {
+            const pickerOptions = document.querySelector('.ql-size .ql-picker-options');
+            pickerOptions.style.display = pickerOptions.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Fechar o dropdown quando clicar fora
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.ql-size')) {
+                document.querySelector('.ql-size .ql-picker-options').style.display = 'none';
+            }
+        });
+
+        // Adicionando ícone do divisor à barra de ferramentas
+        var customButton = document.querySelector('.ql-divider');
+        customButton.innerHTML = '<svg viewBox="0 0 18 18"> <line class="ql-stroke" x1="2" x2="16" y1="9" y2="9"></line> </svg>';
+
+        // Customizando o botão de linha divisória
+        var toolbar = quill.getModule('toolbar');
+        toolbar.addHandler('divider', function() {
+            var range = quill.getSelection();
+            if (range) {
+                quill.insertEmbed(range.index, 'divider', true, 'user');
+                quill.setSelection(range.index + 1, 'silent');
+            }
+        });
+
+        // Define the initial content of the editor from the hidden input field
         quill.root.innerHTML = document.querySelector('input[name="content"]').value;
 
-        // Ao enviar o formulário, definir o valor do campo oculto como o conteúdo do editor
-        document.querySelector('form').addEventListener('submit', function() {
+        document.querySelector('form').addEventListener('submit', function () {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
         });
 
-        // Função para confirmar o cancelamento
         function confirmCancel() {
             if (confirm("Você deseja mesmo cancelar?")) {
                 window.history.back();
             }
         }
+
+        // Carregar o JSON com os estados e cidades
+        fetch("{{ url_for('static', filename='estados_cidades.json') }}")
+            .then(response => response.json())
+            .then(data => {
+                const stateSelect = document.getElementById('state');
+                const citySelect = document.getElementById('city');
+
+                data.estados.forEach(estado => {
+                    const option = document.createElement('option');
+                    option.value = estado.sigla;
+                    option.textContent = estado.nome;
+                    if (estado.sigla === "{{ jurisprudence.state }}") {
+                        option.selected = true;
+                    }
+                    stateSelect.appendChild(option);
+                });
+
+                // Quando o estado é alterado
+                stateSelect.addEventListener('change', function() {
+                    const selectedState = this.value;
+                    citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
+                    citySelect.disabled = selectedState === "";
+
+                    if (selectedState !== "") {
+                        const estado = data.estados.find(estado => estado.sigla === selectedState);
+                        estado.cidades.forEach(cidade => {
+                            const option = document.createElement('option');
+                            option.value = cidade;
+                            option.textContent = cidade;
+                            citySelect.appendChild(option);
+                        });
+                    }
+                });
+
+                // Preencher cidades com base no estado selecionado
+                const initialState = "{{ jurisprudence.state }}";
+                if (initialState !== "") {
+                    const estado = data.estados.find(estado => estado.sigla === initialState);
+                    estado.cidades.forEach(cidade => {
+                        const option = document.createElement('option');
+                        option.value = cidade;
+                        option.textContent = cidade;
+                        if (cidade === "{{ jurisprudence.city }}") {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                }
+            })
+            .catch(error => console.error('Erro ao carregar o JSON:', error));
     </script>
 </body>
 
