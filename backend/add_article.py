@@ -5,8 +5,24 @@ add_article = Blueprint('add_article', __name__, template_folder='../frontend')
 
 @add_article.route('/home/articles')
 def show():
-    articles = Article.query.all()
-    return render_template('articles.html', articles=articles)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    sort_by = request.args.get('sort_by', 'title_asc')
+
+    if sort_by == 'title_asc':
+        order = Article.title.asc()
+    elif sort_by == 'title_desc':
+        order = Article.title.desc()
+    elif sort_by == 'date_asc':
+        order = Article.created_at.asc()
+    elif sort_by == 'date_desc':
+        order = Article.created_at.desc()
+    else:
+        order = Article.title.asc()  # Ordenação padrão
+
+    articles = Article.query.order_by(order).paginate(page=page, per_page=per_page)
+
+    return render_template('articles.html', articles=articles, sort_by=sort_by)
 
 @add_article.route('/home/edit-article/<int:id>', methods=['GET', 'POST'])
 def edit_article(id):

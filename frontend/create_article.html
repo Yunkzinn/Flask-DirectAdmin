@@ -197,6 +197,11 @@
             overflow-wrap: break-word;
         }
 
+        .ql-divider {
+            border-top: 2px solid black;
+            margin: 10px 0;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -302,11 +307,10 @@
     <script>
         // Função para registrar os textos traduzidos em português
         function registerQuillTranslations() {
-            Quill.register('modules/i18n', function (quill, options) {
+            Quill.register('modules/i18n', function(quill, options) {
                 quill.translations = options.translations;
             });
 
-            // Definindo as traduções em português
             const translations = {
                 'header': {
                     '1': 'Cabeçalho 1',
@@ -361,19 +365,35 @@
             return translations;
         }
 
+        // Adicionando o div de linha divisória ao Quill
+        var BlockEmbed = Quill.import('blots/block/embed');
+        class DividerBlot extends BlockEmbed {
+            static create() {
+                let node = super.create();
+                node.setAttribute('contenteditable', false);
+                node.classList.add('ql-divider');
+                return node;
+            }
+        }
+        DividerBlot.blotName = 'divider';
+        DividerBlot.tagName = 'hr';
+
+        Quill.register(DividerBlot);
+
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
-                    [{ 'font': [] }], // Estilo de Fonte
-                    [{ 'size': ['small', false, 'large', 'huge'] }], // Tamanho de Fonte
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
                     ['bold', 'italic', 'underline'],
-                    [{ 'color': [] }, { 'background': [] }], // Cor do Texto e do Fundo
+                    [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }], // Alinhamento
+                    [{ 'align': [] }],
                     ['link', 'image'],
-                    ['clean'] // Remover formatação
+                    [{ 'divider': true }], // Adicionando o botão de linha divisória
+                    ['clean']
                 ]
             },
             i18n: {
@@ -381,7 +401,19 @@
             }
         });
 
-        document.getElementById('article-form').addEventListener('submit', function (event) {
+        var customButton = document.querySelector('.ql-divider');
+        customButton.innerHTML = '<svg viewBox="0 0 18 18"> <line class="ql-stroke" x1="2" x2="16" y1="9" y2="9"></line> </svg>';
+
+        var toolbar = quill.getModule('toolbar');
+        toolbar.addHandler('divider', function() {
+            var range = quill.getSelection();
+            if (range) {
+                quill.insertEmbed(range.index, 'divider', true, 'user');
+                quill.setSelection(range.index + 1, 'silent');
+            }
+        });
+
+        document.getElementById('article-form').addEventListener('submit', function(event) {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
 
@@ -408,7 +440,6 @@
             }
         }
 
-        // Carregar o JSON com os estados e cidades
         fetch("{{ url_for('static', filename='estados_cidades.json') }}")
             .then(response => response.json())
             .then(data => {
@@ -422,14 +453,12 @@
                     stateSelect.appendChild(option);
                 });
 
-                stateSelect.addEventListener('change', function () {
+                stateSelect.addEventListener('change', function() {
                     const selectedState = this.value;
                     citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
-                    citySelect.disabled = false;
+                    citySelect.disabled = selectedState === "";
 
-                    if (selectedState === "") {
-                        citySelect.disabled = true;
-                    } else {
+                    if (selectedState !== "") {
                         const estado = data.estados.find(estado => estado.sigla === selectedState);
                         estado.cidades.forEach(cidade => {
                             const option = document.createElement('option');

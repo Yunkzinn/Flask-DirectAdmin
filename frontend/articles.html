@@ -114,6 +114,17 @@
             background-color: #0056b3;
         }
 
+        .sort-options {
+            margin-bottom: 20px;
+        }
+
+        .sort-options select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -247,6 +258,31 @@
                 font-size: 16px;
             }
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination span {
+            background-color: #e9ecef;
+            cursor: default;
+        }
     </style>
     <!-- Incluir Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -275,6 +311,17 @@
                 <a href="/create-article">+ Adicionar Artigo</a>
             </div>
         </div>
+        <div class="sort-options">
+            <form method="get" action="/home/articles">
+                <label for="sort_by">Ordenar por:</label>
+                <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+                    <option value="title_asc" {% if sort_by == 'title_asc' %}selected{% endif %}>Título (A-Z)</option>
+                    <option value="title_desc" {% if sort_by == 'title_desc' %}selected{% endif %}>Título (Z-A)</option>
+                    <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Mais antigos</option>
+                    <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Mais recentes</option>
+                </select>
+            </form>
+        </div>
         <h2>Artigos</h2>
         <p>Lista com todos os artigos já escritos.</p>
         <table>
@@ -290,7 +337,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for article in articles %}
+                {% for article in articles.items %}
                 <tr>
                     <td>{{ article.title }}</td>
                     <td>{{ article.references }}</td>
@@ -315,6 +362,22 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <div class="pagination">
+            {% if articles.has_prev %}
+            <a href="{{ url_for('home.articles', page=articles.prev_num, sort_by=sort_by) }}">Anterior</a>
+            {% else %}
+            <span>Anterior</span>
+            {% endif %}
+
+            <span>Página {{ articles.page }} de {{ articles.pages }}</span>
+
+            {% if articles.has_next %}
+            <a href="{{ url_for('home.articles', page=articles.next_num, sort_by=sort_by) }}">Próximo</a>
+            {% else %}
+            <span>Próximo</span>
+            {% endif %}
+        </div>
     </div>
 </body>
 
