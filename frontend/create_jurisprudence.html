@@ -197,6 +197,11 @@
             overflow-wrap: break-word;
         }
 
+        .ql-divider {
+            border-top: 2px solid black; /* Linha preta */
+            margin: 10px 0;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -361,23 +366,54 @@
             return translations;
         }
 
+        // Inicializando o Quill Editor com botão de linha divisória
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
-                    [{ 'font': [] }], // Estilo de Fonte
-                    [{ 'size': ['small', false, 'large', 'huge'] }], // Tamanho de Fonte
+                    [{ 'font': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
                     ['bold', 'italic', 'underline'],
-                    [{ 'color': [] }, { 'background': [] }], // Cor do Texto e do Fundo
+                    [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }], // Alinhamento
+                    [{ 'align': [] }],
                     ['link', 'image'],
-                    ['clean'] // Remover formatação
+                    [{ 'divider': true }], // Adicionando o botão de linha divisória
+                    ['clean']
                 ]
             },
             i18n: {
                 translations: registerQuillTranslations()
+            }
+        });
+
+        // Adicionando ícone do divisor à barra de ferramentas
+        var customButton = document.querySelector('.ql-divider');
+        customButton.innerHTML = '<svg viewBox="0 0 18 18"> <line class="ql-stroke" x1="2" x2="16" y1="9" y2="9"></line> </svg>';
+
+        // Adicionando o div de linha divisória ao Quill
+        var BlockEmbed = Quill.import('blots/block/embed');
+        class DividerBlot extends BlockEmbed {
+            static create() {
+                let node = super.create();
+                node.setAttribute('contenteditable', false);
+                node.classList.add('ql-divider');
+                return node;
+            }
+        }
+        DividerBlot.blotName = 'divider';
+        DividerBlot.tagName = 'hr';
+
+        Quill.register(DividerBlot);
+
+        // Customizando o botão de linha divisória
+        var toolbar = quill.getModule('toolbar');
+        toolbar.addHandler('divider', function() {
+            var range = quill.getSelection();
+            if (range) {
+                quill.insertEmbed(range.index, 'divider', true, 'user');
+                quill.setSelection(range.index + 1, 'silent');
             }
         });
 
