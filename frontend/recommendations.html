@@ -114,6 +114,40 @@
             background-color: #0056b3;
         }
 
+        .sorting {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sorting span {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .sorting select {
+            padding: 8px 15px;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            color: #007BFF;
+            background-color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sorting select:focus {
+            outline: none;
+            border-color: #0056b3;
+        }
+
+        .sorting select option {
+            color: #007BFF;
+        }
+
+        .sorting select option.active {
+            background-color: #007BFF;
+            color: white;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -223,36 +257,6 @@
             margin-right: 10px;
         }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .pagination a {
-            color: #007BFF;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            margin: 0 4px;
-            border-radius: 4px;
-        }
-
-        .pagination a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .pagination .active {
-            background-color: #007BFF;
-            color: white;
-            border: 1px solid #007BFF;
-        }
-
-        .pagination .disabled {
-            color: #ccc;
-            border: 1px solid #ddd;
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -276,6 +280,36 @@
             .sidebar a {
                 font-size: 16px;
             }
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination span {
+            background-color: #e9ecef;
+            cursor: default;
+        }
+
+        .pagination .disabled {
+            pointer-events: none;
+            color: #ccc;
         }
     </style>
     <!-- Incluir Font Awesome -->
@@ -307,22 +341,26 @@
         </div>
         <h2>Recomendações</h2>
         <p>Lista com todas as recomendações já registradas.</p>
+
+        <!-- Dropdown de Ordenação -->
+        <div class="sorting">
+            <span>Ordenar por:</span>
+            <select onchange="location = this.value;">
+                <option value="{{ url_for('add_recommendation.show', sort_by='theme_asc', page=1) }}" {% if sort_by == 'theme_asc' %}selected{% endif %}>Tema A-Z</option>
+                <option value="{{ url_for('add_recommendation.show', sort_by='theme_desc', page=1) }}" {% if sort_by == 'theme_desc' %}selected{% endif %}>Tema Z-A</option>
+                <option value="{{ url_for('add_recommendation.show', sort_by='date_asc', page=1) }}" {% if sort_by == 'date_asc' %}selected{% endif %}>Mais Antigas</option>
+                <option value="{{ url_for('add_recommendation.show', sort_by='date_desc', page=1) }}" {% if sort_by == 'date_desc' %}selected{% endif %}>Mais Recentes</option>
+            </select>
+        </div>
+
         <table>
             <thead>
                 <tr>
-                    <th>
-                        <a href="?sort_by=theme_asc">Tema</a>
-                        |
-                        <a href="?sort_by=theme_desc">Tema &#x25BC;</a>
-                    </th>
+                    <th>Tema</th>
                     <th>Recomendações</th>
                     <th>Palavras-chave</th>
                     <th>Especialidade médica</th>
-                    <th>
-                        <a href="?sort_by=date_asc">Data &#x25B2;</a>
-                        |
-                        <a href="?sort_by=date_desc">Data &#x25BC;</a>
-                    </th>
+                    <th>Data</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -348,6 +386,10 @@
                         </form>
                     </td>
                 </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">Nenhuma recomendação encontrada.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -357,25 +399,25 @@
             {% if recommendations.has_prev %}
             <a href="{{ url_for('add_recommendation.show', page=recommendations.prev_num, sort_by=sort_by) }}">&laquo; Anterior</a>
             {% else %}
-            <a class="disabled">&laquo; Anterior</a>
+            <span class="disabled">&laquo; Anterior</span>
             {% endif %}
 
-            {% for page_num in recommendations.iter_pages() %}
-            {% if page_num %}
-            {% if page_num == recommendations.page %}
-            <a class="active">{{ page_num }}</a>
-            {% else %}
-            <a href="{{ url_for('add_recommendation.show', page=page_num, sort_by=sort_by) }}">{{ page_num }}</a>
-            {% endif %}
-            {% else %}
-            <span>...</span>
-            {% endif %}
+            {% for page_num in recommendations.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == recommendations.page %}
+                        <span class="current">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('add_recommendation.show', page=page_num, sort_by=sort_by) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    <span>…</span>
+                {% endif %}
             {% endfor %}
 
             {% if recommendations.has_next %}
             <a href="{{ url_for('add_recommendation.show', page=recommendations.next_num, sort_by=sort_by) }}">Próxima &raquo;</a>
             {% else %}
-            <a class="disabled">Próxima &raquo;</a>
+            <span class="disabled">Próxima &raquo;</span>
             {% endif %}
         </div>
     </div>
