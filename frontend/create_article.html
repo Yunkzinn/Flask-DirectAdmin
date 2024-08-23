@@ -323,9 +323,14 @@
                     'monospace': 'Monospace'
                 },
                 'size': {
-                    'small': 'Pequeno',
-                    'large': 'Grande',
-                    'huge': 'Enorme'
+                    '12': '12',
+                    '14': '14',
+                    '16': '16',
+                    '18': '18',
+                    '20': '20',
+                    '24': '24',
+                    '30': '30',
+                    '36': '36'
                 },
                 'bold': 'Negrito',
                 'italic': 'Itálico',
@@ -386,7 +391,7 @@
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
                     [{ 'font': [] }],
-                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'size': ['12', '14', '16', '18', '20', '24', '30', '36'] }],
                     ['bold', 'italic', 'underline'],
                     [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
@@ -398,6 +403,35 @@
             },
             i18n: {
                 translations: registerQuillTranslations()
+            }
+        });
+
+        // Registrar tamanhos personalizados
+        var Size = Quill.import('attributors/style/size');
+        Size.whitelist = ['12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px'];
+        Quill.register(Size, true);
+
+        // Remover texto "Normal" e atualizar o texto do seletor dinamicamente
+        const sizePickerLabel = document.querySelector('.ql-size .ql-picker-label');
+        const sizeItems = document.querySelectorAll('.ql-size .ql-picker-item');
+
+        sizeItems.forEach((item, index) => {
+            item.setAttribute('data-value', Size.whitelist[index]);
+            item.textContent = Size.whitelist[index].replace('px', ''); // Remove 'px' e exibe apenas o número
+        });
+
+        // Atualizar o seletor de tamanho dinamicamente
+        quill.on('editor-change', function(eventName, ...args) {
+            if (eventName === 'text-change' || eventName === 'selection-change') {
+                const range = quill.getSelection();
+                if (range) {
+                    const format = quill.getFormat(range);
+                    if (format.size) {
+                        sizePickerLabel.innerHTML = format.size.replace('px', ''); // Atualiza o botão do seletor
+                    } else {
+                        sizePickerLabel.innerHTML = '16'; // Valor padrão
+                    }
+                }
             }
         });
 
