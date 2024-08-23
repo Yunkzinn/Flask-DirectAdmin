@@ -45,6 +45,7 @@ class Recommendation(db.Model):
     keywords = db.Column(db.String(255))
     specialty = db.Column(db.String(100))
     content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Novo campo
     
     def __repr__(self):
         return f'<Recommendation {self.theme}>'

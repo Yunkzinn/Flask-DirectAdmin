@@ -7,12 +7,22 @@ add_jurisprudence = Blueprint('add_jurisprudence', __name__, template_folder='..
 def show():
     page = request.args.get('page', 1, type=int)
     per_page = 10
+    sort_by = request.args.get('sort_by', 'title_asc')
 
-    # Paginação da consulta
-    jurisprudences = Jurisprudence.query.paginate(page=page, per_page=per_page)
+    if sort_by == 'title_asc':
+        order = Jurisprudence.title.asc()
+    elif sort_by == 'title_desc':
+        order = Jurisprudence.title.desc()
+    elif sort_by == 'date_asc':
+        order = Jurisprudence.created_at.asc()
+    elif sort_by == 'date_desc':
+        order = Jurisprudence.created_at.desc()
+    else:
+        order = Jurisprudence.title.asc()  # Ordenação padrão
 
-    return render_template('jurisprudences.html', jurisprudences=jurisprudences)
+    jurisprudences = Jurisprudence.query.order_by(order).paginate(page=page, per_page=per_page)
 
+    return render_template('jurisprudences.html', jurisprudences=jurisprudences, sort_by=sort_by)
 
 @add_jurisprudence.route('/home/edit-jurisprudence/<int:id>', methods=['GET', 'POST'])
 def edit_jurisprudence(id):

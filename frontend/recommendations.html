@@ -121,7 +121,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            table-layout: fixed; /* Adiciona comportamento de tabela fixa */
+            table-layout: fixed;
         }
 
         table thead {
@@ -131,12 +131,12 @@
         table th,
         table td {
             padding: 12px 15px;
-            text-align: center; /* Centraliza o texto em todas as células */
+            text-align: center;
             border-bottom: 1px solid #ddd;
             vertical-align: middle;
-            white-space: nowrap; /* Impede quebra de linha */
-            overflow: hidden; /* Esconde o excesso de texto */
-            text-overflow: ellipsis; /* Adiciona "..." ao final do texto longo */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         table th {
@@ -223,6 +223,36 @@
             margin-right: 10px;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            color: #007BFF;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination .active {
+            background-color: #007BFF;
+            color: white;
+            border: 1px solid #007BFF;
+        }
+
+        .pagination .disabled {
+            color: #ccc;
+            border: 1px solid #ddd;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -280,20 +310,30 @@
         <table>
             <thead>
                 <tr>
-                    <th>Tema</th>
+                    <th>
+                        <a href="?sort_by=theme_asc">Tema</a>
+                        |
+                        <a href="?sort_by=theme_desc">Tema &#x25BC;</a>
+                    </th>
                     <th>Recomendações</th>
                     <th>Palavras-chave</th>
                     <th>Especialidade médica</th>
+                    <th>
+                        <a href="?sort_by=date_asc">Data &#x25B2;</a>
+                        |
+                        <a href="?sort_by=date_desc">Data &#x25BC;</a>
+                    </th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {% for recommendation in recommendations %}
+                {% for recommendation in recommendations.items %}
                 <tr>
                     <td>{{ recommendation.theme }}</td>
                     <td>{{ recommendation.recommendations }}</td>
                     <td>{{ recommendation.keywords }}</td>
                     <td>{{ recommendation.specialty }}</td>
+                    <td>{{ recommendation.created_at.strftime('%d/%m/%Y') }}</td>
                     <td class="actions">
                         <a href="{{ url_for('add_recommendation.edit_recommendation', id=recommendation.id) }}" class="edit-icon" aria-label="Editar recomendação">
                             <i class="fas fa-pencil-alt"></i>
@@ -311,6 +351,33 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Paginação -->
+        <div class="pagination">
+            {% if recommendations.has_prev %}
+            <a href="{{ url_for('add_recommendation.show', page=recommendations.prev_num, sort_by=sort_by) }}">&laquo; Anterior</a>
+            {% else %}
+            <a class="disabled">&laquo; Anterior</a>
+            {% endif %}
+
+            {% for page_num in recommendations.iter_pages() %}
+            {% if page_num %}
+            {% if page_num == recommendations.page %}
+            <a class="active">{{ page_num }}</a>
+            {% else %}
+            <a href="{{ url_for('add_recommendation.show', page=page_num, sort_by=sort_by) }}">{{ page_num }}</a>
+            {% endif %}
+            {% else %}
+            <span>...</span>
+            {% endif %}
+            {% endfor %}
+
+            {% if recommendations.has_next %}
+            <a href="{{ url_for('add_recommendation.show', page=recommendations.next_num, sort_by=sort_by) }}">Próxima &raquo;</a>
+            {% else %}
+            <a class="disabled">Próxima &raquo;</a>
+            {% endif %}
+        </div>
     </div>
 </body>
 
