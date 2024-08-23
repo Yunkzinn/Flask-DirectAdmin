@@ -324,9 +324,14 @@
                     'monospace': 'Monospace'
                 },
                 'size': {
-                    'small': 'Pequeno',
-                    'large': 'Grande',
-                    'huge': 'Enorme'
+                    '12': '12px',
+                    '14': '14px',
+                    '16': '16px',
+                    '18': '18px',
+                    '20': '20px',
+                    '24': '24px',
+                    '30': '30px',
+                    '36': '36px'
                 },
                 'bold': 'Negrito',
                 'italic': 'Itálico',
@@ -381,14 +386,19 @@
 
         Quill.register(DividerBlot);
 
-        // Inicializando o Quill Editor com botão de linha divisória
+        // Registro dos tamanhos personalizados
+        var Size = Quill.import('attributors/style/size');
+        Size.whitelist = ['12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px'];
+        Quill.register(Size, true);
+
+        // Inicializando o Quill Editor com botão de linha divisória e seleção de tamanho de fonte por números
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
                     [{ 'font': [] }],
-                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'size': Size.whitelist }],
                     ['bold', 'italic', 'underline'],
                     [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
@@ -400,6 +410,42 @@
             },
             i18n: {
                 translations: registerQuillTranslations()
+            }
+        });
+
+        // Corrigir o texto exibido na lista de tamanhos e remover "Normal"
+        const sizePicker = document.querySelector('.ql-size .ql-picker-label');
+        sizePicker.innerHTML = '12px';  // Define um valor padrão de exibição
+        const sizeItems = document.querySelectorAll('.ql-size .ql-picker-item');
+
+        sizeItems.forEach((item) => {
+            const size = item.getAttribute('data-value');
+            item.textContent = size;
+            if (item.classList.contains('ql-picker-item')) {
+                item.innerHTML = size; // Atualiza o texto do item para exibir apenas o tamanho
+            }
+        });
+
+        // Atualizar o rótulo do seletor ao escolher um tamanho e fechar dropdown
+        sizeItems.forEach((item) => {
+            item.addEventListener('click', function() {
+                const selectedSize = item.getAttribute('data-value');
+                sizePicker.innerHTML = selectedSize;
+                quill.format('size', selectedSize); // Aplicar tamanho ao texto selecionado
+                document.querySelector('.ql-size .ql-picker-options').style.display = 'none'; // Fechar o dropdown
+            });
+        });
+
+        // Abrir o dropdown ao clicar no rótulo
+        sizePicker.addEventListener('click', function() {
+            const pickerOptions = document.querySelector('.ql-size .ql-picker-options');
+            pickerOptions.style.display = pickerOptions.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Fechar o dropdown quando clicar fora
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.ql-size')) {
+                document.querySelector('.ql-size .ql-picker-options').style.display = 'none';
             }
         });
 
