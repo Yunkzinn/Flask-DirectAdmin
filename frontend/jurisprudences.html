@@ -114,6 +114,40 @@
             background-color: #0056b3;
         }
 
+        .sorting {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sorting span {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .sorting select {
+            padding: 8px 15px;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            color: #007BFF;
+            background-color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sorting select:focus {
+            outline: none;
+            border-color: #0056b3;
+        }
+
+        .sorting select option {
+            color: #007BFF;
+        }
+
+        .sorting select option.active {
+            background-color: #007BFF;
+            color: white;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -121,7 +155,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            table-layout: fixed; /* Adiciona comportamento de tabela fixa */
+            table-layout: fixed;
         }
 
         table thead {
@@ -131,12 +165,12 @@
         table th,
         table td {
             padding: 12px 15px;
-            text-align: center; /* Centraliza o texto em todas as células */
+            text-align: center;
             border-bottom: 1px solid #ddd;
             vertical-align: middle;
-            white-space: nowrap; /* Impede quebra de linha */
-            overflow: hidden; /* Esconde o excesso de texto */
-            text-overflow: ellipsis; /* Adiciona "..." ao final do texto longo */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         table th {
@@ -247,6 +281,36 @@
                 font-size: 16px;
             }
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination span {
+            background-color: #e9ecef;
+            cursor: default;
+        }
+
+        .pagination .disabled {
+            pointer-events: none;
+            color: #ccc;
+        }
     </style>
     <!-- Incluir Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -277,6 +341,18 @@
         </div>
         <h2>Jurisprudências</h2>
         <p>Lista com todas as jurisprudências já registradas.</p>
+
+        <!-- Dropdown de Ordenação -->
+        <div class="sorting">
+            <span>Ordenar por:</span>
+            <select onchange="location = this.value;">
+                <option value="{{ url_for('home.jurisprudences', sort_by='title_asc', page=1) }}" {% if sort_by == 'title_asc' %}selected{% endif %}>Título A-Z</option>
+                <option value="{{ url_for('home.jurisprudences', sort_by='title_desc', page=1) }}" {% if sort_by == 'title_desc' %}selected{% endif %}>Título Z-A</option>
+                <option value="{{ url_for('home.jurisprudences', sort_by='date_asc', page=1) }}" {% if sort_by == 'date_asc' %}selected{% endif %}>Mais Velhos</option>
+                <option value="{{ url_for('home.jurisprudences', sort_by='date_desc', page=1) }}" {% if sort_by == 'date_desc' %}selected{% endif %}>Mais Recentes</option>
+            </select>
+        </div>
+
         <table>
             <thead>
                 <tr>
@@ -290,7 +366,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for jurisprudence in jurisprudences %}
+                {% for jurisprudence in jurisprudences.items %}
                 <tr>
                     <td>{{ jurisprudence.title }}</td>
                     <td>{{ jurisprudence.references }}</td>
@@ -312,9 +388,39 @@
                         </form>
                     </td>
                 </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">Nenhuma jurisprudência encontrada.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <div class="pagination">
+            {% if jurisprudences.has_prev %}
+            <a href="{{ url_for('home.jurisprudences', page=jurisprudences.prev_num, sort_by=sort_by) }}">&laquo; Anterior</a>
+            {% else %}
+            <span class="disabled">&laquo; Anterior</span>
+            {% endif %}
+
+            {% for page_num in jurisprudences.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == jurisprudences.page %}
+                        <span class="current">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('home.jurisprudences', page=page_num, sort_by=sort_by) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    <span>…</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if jurisprudences.has_next %}
+            <a href="{{ url_for('home.jurisprudences', page=jurisprudences.next_num, sort_by=sort_by) }}">Próximo &raquo;</a>
+            {% else %}
+            <span class="disabled">Próximo &raquo;</span>
+            {% endif %}
+        </div>
     </div>
 </body>
 

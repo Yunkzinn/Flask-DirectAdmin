@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -29,9 +30,10 @@ class Jurisprudence(db.Model):
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
     keywords = db.Column(db.String(255))
-    specialty = db.Column(db.String(100))  # Campo adicionado
+    specialty = db.Column(db.String(100))
     content = db.Column(db.Text, nullable=False)
-    
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Novo campo
+
     def __repr__(self):
         return f'<Jurisprudence {self.title}>'
 
