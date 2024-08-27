@@ -202,6 +202,14 @@
             margin: 10px 0;
         }
 
+        .ql-font-size {
+            width: 60px;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -293,6 +301,10 @@
 
             <div class="form-group">
                 <label for="content">Artigo:</label>
+                <div id="toolbar">
+                    <input type="number" id="font-size-input" class="ql-font-size" placeholder="Tamanho">
+                    <button id="apply-font-size">Aplicar</button>
+                </div>
                 <div id="editor-container"></div>
                 <input type="hidden" id="content" name="content">
             </div>
@@ -323,16 +335,6 @@
                     'serif': 'Serif',
                     'monospace': 'Monospace'
                 },
-                'size': {
-                    '12': '12px',
-                    '14': '14px',
-                    '16': '16px',
-                    '18': '18px',
-                    '20': '20px',
-                    '24': '24px',
-                    '30': '30px',
-                    '36': '36px'
-                },
                 'bold': 'Negrito',
                 'italic': 'Itálico',
                 'underline': 'Sublinhado',
@@ -341,17 +343,6 @@
                 'list': {
                     'ordered': 'Lista Ordenada',
                     'bullet': 'Lista com Marcadores'
-                },
-                'script': {
-                    'sub': 'Subscrito',
-                    'super': 'Sobrescrito'
-                },
-                'indent': {
-                    '-1': 'Diminuir Recuo',
-                    '+1': 'Aumentar Recuo'
-                },
-                'direction': {
-                    'rtl': 'Direção da Direita para a Esquerda'
                 },
                 'align': {
                     '': 'Alinhar',
@@ -386,19 +377,12 @@
 
         Quill.register(DividerBlot);
 
-        // Registro dos tamanhos personalizados
-        var Size = Quill.import('attributors/style/size');
-        Size.whitelist = ['12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px'];
-        Quill.register(Size, true);
-
-        // Inicializando o Quill Editor com botão de linha divisória e seleção de tamanho de fonte por números
+        // Inicializando o Quill Editor com botão de linha divisória
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
-                    [{ 'font': [] }],
-                    [{ 'size': Size.whitelist }],
                     ['bold', 'italic', 'underline'],
                     [{ 'color': [] }, { 'background': [] }],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
@@ -413,53 +397,27 @@
             }
         });
 
-        // Corrigir o texto exibido na lista de tamanhos e remover "Normal"
-        const sizePicker = document.querySelector('.ql-size .ql-picker-label');
-        sizePicker.innerHTML = '12px';  // Define um valor padrão de exibição
-        const sizeItems = document.querySelectorAll('.ql-size .ql-picker-item');
-
-        sizeItems.forEach((item) => {
-            const size = item.getAttribute('data-value');
-            item.textContent = size;
-            if (item.classList.contains('ql-picker-item')) {
-                item.innerHTML = size; // Atualiza o texto do item para exibir apenas o tamanho
-            }
-        });
-
-        // Atualizar o rótulo do seletor ao escolher um tamanho e fechar dropdown
-        sizeItems.forEach((item) => {
-            item.addEventListener('click', function() {
-                const selectedSize = item.getAttribute('data-value');
-                sizePicker.innerHTML = selectedSize;
-                quill.format('size', selectedSize); // Aplicar tamanho ao texto selecionado
-                document.querySelector('.ql-size .ql-picker-options').style.display = 'none'; // Fechar o dropdown
-            });
-        });
-
-        // Abrir o dropdown ao clicar no rótulo
-        sizePicker.addEventListener('click', function() {
-            const pickerOptions = document.querySelector('.ql-size .ql-picker-options');
-            pickerOptions.style.display = pickerOptions.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Fechar o dropdown quando clicar fora
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.ql-size')) {
-                document.querySelector('.ql-size .ql-picker-options').style.display = 'none';
-            }
-        });
-
-        // Adicionando ícone do divisor à barra de ferramentas
+        // Customizando o botão de linha divisória
         var customButton = document.querySelector('.ql-divider');
         customButton.innerHTML = '<svg viewBox="0 0 18 18"> <line class="ql-stroke" x1="2" x2="16" y1="9" y2="9"></line> </svg>';
 
-        // Customizando o botão de linha divisória
         var toolbar = quill.getModule('toolbar');
         toolbar.addHandler('divider', function() {
             var range = quill.getSelection();
             if (range) {
                 quill.insertEmbed(range.index, 'divider', true, 'user');
                 quill.setSelection(range.index + 1, 'silent');
+            }
+        });
+
+        // Adicionando funcionalidade para alterar o tamanho da fonte via input
+        document.getElementById('apply-font-size').addEventListener('click', function() {
+            var size = document.getElementById('font-size-input').value;
+            if (size) {
+                var range = quill.getSelection();
+                if (range) {
+                    quill.formatText(range.index, range.length, 'size', size + 'px');
+                }
             }
         });
 
