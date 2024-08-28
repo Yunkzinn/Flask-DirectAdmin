@@ -202,14 +202,6 @@
             margin: 10px 0;
         }
 
-        .ql-font-size {
-            width: 60px;
-            padding: 5px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -244,6 +236,21 @@
     </style>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>
+        .ql-toolbar .ql-formats {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .ql-toolbar input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-left: 5px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -301,9 +308,25 @@
 
             <div class="form-group">
                 <label for="content">Artigo:</label>
-                <div id="toolbar">
-                    <input type="number" id="font-size-input" class="ql-font-size" placeholder="Tamanho">
-                    <button id="apply-font-size">Aplicar</button>
+                <div id="editor-toolbar">
+                    <select class="ql-header">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option selected></option>
+                    </select>
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <input type="number" id="fontsize" value="12" min="8" max="72" step="1" aria-label="Font size">
+                    <button class="ql-color"></button>
+                    <button class="ql-background"></button>
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                    <button class="ql-align"></button>
+                    <button class="ql-link"></button>
+                    <button class="ql-image"></button>
+                    <button class="ql-divider"></button>
+                    <button class="ql-clean"></button>
                 </div>
                 <div id="editor-container"></div>
                 <input type="hidden" id="content" name="content">
@@ -317,6 +340,11 @@
     </div>
 
     <script>
+        // Registrar tamanhos de fonte personalizados no Quill
+        var SizeStyle = Quill.import('attributors/style/size');
+        SizeStyle.whitelist = ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px', '48px', '60px', '72px'];
+        Quill.register(SizeStyle, true);
+
         // Função para registrar os textos traduzidos em português
         function registerQuillTranslations() {
             Quill.register('modules/i18n', function(quill, options) {
@@ -334,6 +362,16 @@
                     'sans-serif': 'Sans Serif',
                     'serif': 'Serif',
                     'monospace': 'Monospace'
+                },
+                'size': {
+                    '12px': '12px',
+                    '14px': '14px',
+                    '16px': '16px',
+                    '18px': '18px',
+                    '20px': '20px',
+                    '24px': '24px',
+                    '30px': '30px',
+                    '36px': '36px'
                 },
                 'bold': 'Negrito',
                 'italic': 'Itálico',
@@ -377,32 +415,50 @@
 
         Quill.register(DividerBlot);
 
-        // Inicializando o Quill Editor com botão de linha divisória
+        // Inicializando o Quill Editor com botão de linha divisória e input de tamanho de fonte
         var quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
-                toolbar: [
-                    [{ 'header': '1' }, { 'header': '2' }],
-                    ['bold', 'italic', 'underline'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    [{ 'align': [] }],
-                    ['link', 'image'],
-                    [{ 'divider': true }], // Adicionando o botão de linha divisória
-                    ['clean']
-                ]
+                toolbar: '#editor-toolbar'
             },
             i18n: {
                 translations: registerQuillTranslations()
             }
         });
 
-        // Customizando o botão de linha divisória
+        // Adicionando funcionalidade ao input de tamanho de fonte
+        document.getElementById('fontsize').addEventListener('input', function () {
+            var size = this.value + 'px';  // Converte para 'px'
+            if (SizeStyle.whitelist.includes(size)) {
+                // Aplica o tamanho ao texto selecionado ou ao cursor atual
+                quill.format('size', size);
+
+                // Mantém o tamanho de fonte para qualquer texto futuro digitado
+                quill.root.focus(); // Garante que o editor está focado para aplicação do estilo
+
+                // Força a aplicação do tamanho atual a cada nova inserção de texto
+                quill.on('text-change', function(delta, oldDelta, source) {
+                    if (source === 'user') {
+                        quill.format('size', size);
+                    }
+                });
+
+                // Mantém o tamanho selecionado mesmo após mudanças de seleção ou foco
+                quill.on('selection-change', function(range) {
+                    if (range && range.length === 0) { // Quando o cursor está ativo, sem seleção
+                        quill.format('size', size);
+                    }
+                });
+            }
+        });
+
+        // Adicionando ícone do divisor
+        var toolbar = quill.getModule('toolbar');
         var customButton = document.querySelector('.ql-divider');
         customButton.innerHTML = '<svg viewBox="0 0 18 18"> <line class="ql-stroke" x1="2" x2="16" y1="9" y2="9"></line> </svg>';
 
-        var toolbar = quill.getModule('toolbar');
-        toolbar.addHandler('divider', function() {
+        // Handler para adicionar o divisor
+        toolbar.addHandler('divider', function () {
             var range = quill.getSelection();
             if (range) {
                 quill.insertEmbed(range.index, 'divider', true, 'user');
@@ -410,18 +466,7 @@
             }
         });
 
-        // Adicionando funcionalidade para alterar o tamanho da fonte via input
-        document.getElementById('apply-font-size').addEventListener('click', function() {
-            var size = document.getElementById('font-size-input').value;
-            if (size) {
-                var range = quill.getSelection();
-                if (range) {
-                    quill.formatText(range.index, range.length, 'size', size + 'px');
-                }
-            }
-        });
-
-        document.getElementById('article-form').addEventListener('submit', function(event) {
+        document.getElementById('article-form').addEventListener('submit', function (event) {
             var content = document.querySelector('input[name="content"]');
             content.value = quill.root.innerHTML;
 
@@ -461,7 +506,7 @@
                     stateSelect.appendChild(option);
                 });
 
-                stateSelect.addEventListener('change', function() {
+                stateSelect.addEventListener('change', function () {
                     const selectedState = this.value;
                     citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
                     citySelect.disabled = selectedState === "";
