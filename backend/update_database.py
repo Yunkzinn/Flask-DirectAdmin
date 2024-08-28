@@ -1,30 +1,26 @@
 import sqlite3
-from datetime import datetime
 
 # Conecte-se ao banco de dados
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
 
-# Função para adicionar a coluna created_at e atualizar registros existentes
-def add_created_at_column(table_name):
+# Função para adicionar uma coluna a uma tabela
+def add_column(table_name, column_name, column_type):
     try:
-        cursor.execute(f'ALTER TABLE {table_name} ADD COLUMN created_at TIMESTAMP')
-        print(f"Coluna 'created_at' adicionada com sucesso na tabela {table_name}.")
+        cursor.execute(f'ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}')
+        print(f"Coluna '{column_name}' adicionada com sucesso na tabela {table_name}.")
     except sqlite3.OperationalError as e:
-        print(f"Erro ao adicionar a coluna na tabela {table_name}: {e}")
+        print(f"Erro ao adicionar a coluna '{column_name}' na tabela {table_name}: {e}")
 
-    # Atualize todos os registros existentes com a data atual
-    cursor.execute(f'SELECT id FROM {table_name}')
-    records = cursor.fetchall()
-    now = datetime.utcnow()
+# Função para adicionar a coluna categoria
+def add_categoria_column(table_name):
+    add_column(table_name, 'categoria', 'TEXT')
 
-    for record in records:
-        cursor.execute(f'UPDATE {table_name} SET created_at = ? WHERE id = ?', (now, record[0]))
+# Adicione a coluna categoria nas tabelas recommendation, jurisprudence e article
+tables = ['recommendation', 'jurisprudence', 'article']
 
-# Adicione a coluna created_at nas tabelas recommendation, jurisprudence e article
-add_created_at_column('recommendation')
-add_created_at_column('jurisprudence')
-add_created_at_column('article')
+for table in tables:
+    add_categoria_column(table)
 
 # Salve as alterações e feche a conexão
 conn.commit()

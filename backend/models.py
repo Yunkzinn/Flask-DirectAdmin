@@ -17,7 +17,8 @@ class Article(db.Model):
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
     keywords = db.Column(db.String(200))
-    specialty = db.Column(db.String(100))  # Campo adicionado
+    specialty = db.Column(db.String(100))
+    categoria = db.Column(db.String(100))  # Novo campo adicionado
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Novo campo
     

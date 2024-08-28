@@ -34,7 +34,8 @@ def edit_article(id):
         article.city = request.form['city']
         article.state = request.form['state']
         article.keywords = request.form['keywords']
-        article.specialty = request.form['specialty']  # Campo adicionado
+        article.specialty = request.form['specialty']
+        article.categoria = request.form['categoria']  # Certifique-se de que este campo está sendo atualizado
         article.content = request.form['content']
         
         db.session.commit()

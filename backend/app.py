@@ -106,6 +106,7 @@ def get_artigos():
             "state": a.state,
             "keywords": a.keywords,
             "specialty": a.specialty,
+            "categoria": a.categoria,  # Campo adicionado
             "content": a.content
         } for a in artigos]
     return jsonify(results)
